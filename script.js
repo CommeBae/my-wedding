@@ -117,7 +117,7 @@
     };
     setMeta('property', 'og:title', m.title);
     setMeta('property', 'og:description', m.description);
-    setMeta('property', 'og:image', 'images/샘플웨딩사진/ㄴ.jpg');
+    setMeta('property', 'og:image', 'images/og/ㄴ.jpg');
     setMeta('name', 'description', m.description);
   }
 
@@ -449,7 +449,7 @@
       return;
     }
 
-    galleryImages.forEach((src, i) => {
+    galleryImages.forEach(function (src, i) {
       const div = document.createElement('div');
       div.className = 'gallery__item animate-item';
       div.setAttribute('data-animate', 'scale-in');
