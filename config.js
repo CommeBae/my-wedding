@@ -39,9 +39,9 @@ const CONFIG = {
     date: "2026-05-30",
     time: "17:40",
     venue: "KDW 강동웨딩홀",
-    hall: "마이더스 홀",
+    hall: "마이더스 홀\n1시간 30분 무료주차 가능",
     address: "서울특별시 강동구 천호대로 1102",
-    tel: "02-477-7700\n1시간 30분 무료주차 가능",
+    tel: "02-477-7700",
     mapLinks: {
       kakao: "https://place.map.kakao.com/10124741",
       naver: "https://naver.me/FPn5kMTA"
