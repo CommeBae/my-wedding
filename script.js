@@ -38,32 +38,32 @@
 
   function loadImagesFromFolder(folder, maxAttempts = 50) {
     return new Promise(resolve => {
-        const images = [];
-        let current = 1;
-        let consecutiveFails = 0;
+      const images = [];
+      let current = 1;
+      let consecutiveFails = 0;
 
-        function tryNext() {
-            if (current > maxAttempts || consecutiveFails >= 3) {
-                resolve(images);
-                return;
-            }
-            const img = new Image();
-            const path = `images/${folder}/${current}.jpg`;
-            img.onload = function() {
-                images.push(path);
-                consecutiveFails = 0;
-                current++;
-                tryNext();
-            };
-            img.onerror = function() {
-                consecutiveFails++;
-                current++;
-                tryNext();
-            };
-            img.src = path;
+      function tryNext() {
+        if (current > maxAttempts || consecutiveFails >= 3) {
+          resolve(images);
+          return;
         }
+        const img = new Image();
+        const path = `images/${folder}/${current}.jpg`;
+        img.onload = function () {
+          images.push(path);
+          consecutiveFails = 0;
+          current++;
+          tryNext();
+        };
+        img.onerror = function () {
+          consecutiveFails++;
+          current++;
+          tryNext();
+        };
+        img.src = path;
+      }
 
-        tryNext();
+      tryNext();
     });
   }
 
@@ -122,6 +122,42 @@
   }
 
   /* ═══════════════════════════════════════════
+     Music Player
+     ═══════════════════════════════════════════ */
+
+  let audio = null;
+  let isMuted = false;
+
+  function initMusic() {
+    audio = new Audio('audio/marry_you.mp3');
+    audio.loop = true;
+    audio.volume = 0.4;
+    audio.preload = 'auto';
+
+    const musicBtn = $('#musicToggle');
+    if (!musicBtn) return;
+
+    musicBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      audio.muted = isMuted;
+      musicBtn.classList.toggle('is-muted', isMuted);
+      musicBtn.setAttribute('aria-label', isMuted ? '음악 켜기' : '음악 끄기');
+
+      const iconOn = musicBtn.querySelector('.icon-on');
+      const iconOff = musicBtn.querySelector('.icon-off');
+      if (iconOn) iconOn.style.display = isMuted ? 'none' : '';
+      if (iconOff) iconOff.style.display = isMuted ? '' : 'none';
+    });
+  }
+
+  function playMusic() {
+    if (!audio) return;
+    audio.play().catch(() => {
+      // 브라우저 정책으로 차단된 경우 조용히 무시
+    });
+  }
+
+  /* ═══════════════════════════════════════════
      Curtain
      ═══════════════════════════════════════════ */
 
@@ -130,10 +166,14 @@
     const btn = $('#curtainBtn');
     const namesEl = $('#curtainNames');
 
-    // If useCurtain is false, skip the curtain entirely
     if (CONFIG.useCurtain === false) {
       curtain.style.display = 'none';
       initPetals();
+      // 커튼 없을 때: 첫 터치/클릭에서 음악 시작
+      document.addEventListener('click', function startOnce() {
+        playMusic();
+        document.removeEventListener('click', startOnce);
+      }, { once: true });
       return;
     }
 
@@ -142,6 +182,9 @@
     btn.addEventListener('click', () => {
       curtain.classList.add('is-open');
       document.body.classList.remove('no-scroll');
+
+      playMusic(); // 커튼 버튼 클릭 = 유저 인터랙션 → 자동재생 허용
+
       setTimeout(() => {
         curtain.classList.add('is-hidden');
         initPetals();
@@ -206,7 +249,6 @@
         ctx.globalAlpha = this.opacity;
         ctx.fillStyle = '#e8c8b0';
         ctx.beginPath();
-        // Petal shape
         ctx.moveTo(0, 0);
         ctx.bezierCurveTo(
           this.size * 0.3, -this.size * 0.4,
@@ -260,7 +302,6 @@
     function update() {
       const now = new Date();
       const diff = target - now;
-
       const labelEl = $('#countdownLabel');
 
       if (diff <= 0) {
@@ -333,12 +374,10 @@
 
     const grid = $('#calendarGrid');
 
-    // Header
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
     grid.innerHTML = `<div class="calendar__header">${monthNames[month]} ${year}</div>`;
 
-    // Weekdays
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
     const wdRow = document.createElement('div');
     wdRow.className = 'calendar__weekdays';
@@ -350,7 +389,6 @@
     });
     grid.appendChild(wdRow);
 
-    // Days
     const daysContainer = document.createElement('div');
     daysContainer.className = 'calendar__days';
 
@@ -373,14 +411,12 @@
 
     grid.appendChild(daysContainer);
 
-    // Google Calendar link
     const startDate = dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     const endDt = new Date(dt.getTime() + 2 * 60 * 60 * 1000);
     const endDate = endDt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CONFIG.groom.name + ' ♥ ' + CONFIG.bride.name + ' 결혼식')}&dates=${startDate}/${endDate}&location=${encodeURIComponent(CONFIG.wedding.venue + ' ' + CONFIG.wedding.address)}&details=${encodeURIComponent('결혼식에 초대합니다.')}`;
     $('#googleCalBtn').href = gcalUrl;
 
-    // ICS download
     $('#icsDownloadBtn').addEventListener('click', () => {
       const icsContent = [
         'BEGIN:VCALENDAR',
@@ -416,7 +452,6 @@
     $('#storyContent').textContent = CONFIG.story.content;
 
     const container = $('#storyPhotos');
-    // Remove loading placeholder if present
     const placeholder = container.querySelector('.loading-placeholder');
     if (placeholder) placeholder.remove();
 
@@ -438,12 +473,10 @@
 
   function initGallery(galleryImages) {
     const grid = $('#galleryGrid');
-    // Remove loading placeholder if present
     const placeholder = grid.querySelector('.loading-placeholder');
     if (placeholder) placeholder.remove();
 
     if (galleryImages.length === 0) {
-      // Hide gallery section if no images found
       const gallerySection = $('#gallery');
       if (gallerySection) gallerySection.style.display = 'none';
       return;
@@ -487,7 +520,6 @@
     const img = $('#modalImg');
     img.src = modalImages[modalIndex];
     $('#modalCounter').textContent = `${modalIndex + 1} / ${modalImages.length}`;
-
     $('#modalPrev').style.display = modalIndex > 0 ? '' : 'none';
     $('#modalNext').style.display = modalIndex < modalImages.length - 1 ? '' : 'none';
   }
@@ -512,7 +544,6 @@
       }
     });
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (!modal.classList.contains('is-open')) return;
       if (e.key === 'Escape') closePhotoModal();
@@ -520,9 +551,7 @@
       if (e.key === 'ArrowRight') modalNavigate(1);
     });
 
-    // Swipe support
     const container = $('#modalContainer');
-
     container.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
@@ -539,13 +568,11 @@
     const diffX = touchStartX - touchEndX;
     const diffY = touchStartY - touchEndY;
     const minSwipe = 50;
-
     if (Math.abs(diffX) < minSwipe || Math.abs(diffX) < Math.abs(diffY)) return;
-
     if (diffX > 0) {
-      modalNavigate(1); // swipe left -> next
+      modalNavigate(1);
     } else {
-      modalNavigate(-1); // swipe right -> prev
+      modalNavigate(-1);
     }
   }
 
@@ -600,7 +627,6 @@
     trigger.addEventListener('click', () => {
       const expanded = trigger.getAttribute('aria-expanded') === 'true';
       trigger.setAttribute('aria-expanded', !expanded);
-
       if (!expanded) {
         panel.style.maxHeight = panel.scrollHeight + 'px';
       } else {
@@ -612,11 +638,9 @@
   function initAccounts() {
     renderAccounts(CONFIG.accounts.groom, 'groomAccountList');
     renderAccounts(CONFIG.accounts.bride, 'brideAccountList');
-
     initAccordion('groomAccordion', 'groomAccordionPanel');
     initAccordion('brideAccordion', 'brideAccordionPanel');
 
-    // Copy account delegates
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.account-item__copy');
       if (!btn) return;
@@ -644,9 +668,7 @@
   function showLoadingPlaceholders() {
     const storyPhotos = $('#storyPhotos');
     const galleryGrid = $('#galleryGrid');
-
     const placeholderHTML = '<div class="loading-placeholder"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>';
-
     if (storyPhotos) storyPhotos.innerHTML = placeholderHTML;
     if (galleryGrid) galleryGrid.innerHTML = placeholderHTML;
   }
@@ -671,10 +693,8 @@
       }
     );
 
-    // Observe initial static items
     $$('.animate-item').forEach((el) => observer.observe(el));
 
-    // Re-observe after dynamic content is added (MutationObserver)
     const mutObs = new MutationObserver((mutations) => {
       mutations.forEach((m) => {
         m.addedNodes.forEach((node) => {
@@ -698,33 +718,29 @@
 
   async function init() {
     setMetaTags();
+    initMusic();      // ← 추가됨
     initCurtain();
     initHero();
     initCountdown();
     initGreeting();
     initCalendar();
 
-    // Show loading placeholders while detecting images
     showLoadingPlaceholders();
 
-    // Init sections that don't depend on image detection
     initPhotoModal();
     initLocation();
     initAccounts();
     initFooter();
     initScrollAnimations();
 
-    // Set story text immediately (photos load async)
     $('#storyTitle').textContent = CONFIG.story.title;
     $('#storyContent').textContent = CONFIG.story.content;
 
-    // Auto-detect story and gallery images in parallel
     const [storyImages, galleryImages] = await Promise.all([
       loadImagesFromFolder('story'),
       loadImagesFromFolder('gallery')
     ]);
 
-    // Render sections with discovered images
     initStory(storyImages);
     initGallery(galleryImages);
   }
