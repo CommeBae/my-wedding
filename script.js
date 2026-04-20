@@ -129,9 +129,9 @@
   let isMuted = false;
 
   function initMusic() {
-    audio = new Audio('10000 Hours trim.mp3');
+    audio = new Audio('audio/1.mp3');
     audio.loop = true;
-    audio.volume = 0.4;
+    audio.volume = 0.5;
     audio.preload = 'auto';
 
     const musicBtn = $('#musicToggle');
