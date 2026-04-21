@@ -117,7 +117,7 @@
     };
     setMeta('property', 'og:title', m.title);
     setMeta('property', 'og:description', m.description);
-    setMeta('property', 'og:image', 'https://commebae.github.io/my-wedding/images/hero/7.jpg');
+    setMeta('property', 'og:image', 'https://commebae.github.io/my-wedding/images/og/1.jpg');
     setMeta('name', 'description', m.description);
   }
 
