@@ -285,12 +285,15 @@
      Hero Section
      ═══════════════════════════════════════════ */
 
-  function initHero() {
-    $('#heroPhoto').src = 'images/hero/7.jpg';
-    $('#heroNames').textContent = `${CONFIG.groom.name}  ·  ${CONFIG.bride.name}`;
-    $('#heroDate').textContent = formatDate(CONFIG.wedding.date, CONFIG.wedding.time);
-    $('#heroVenue').textContent = CONFIG.wedding.venue;
-  }
+function initHero() {
+  $('#heroPhoto').src = 'images/hero/7.jpg';
+  $('#heroNames').innerHTML = `
+    <div>${CONFIG.groom.father} & ${CONFIG.groom.mother}의 아들, <strong>${CONFIG.groom.name}</strong></div>
+    <div>${CONFIG.bride.father} & ${CONFIG.bride.mother}의 딸, <strong>${CONFIG.bride.name}</strong></div>
+  `;
+  $('#heroDate').textContent = formatDate(CONFIG.wedding.date, CONFIG.wedding.time);
+  $('#heroVenue').textContent = CONFIG.wedding.venue;
+}
 
   /* ═══════════════════════════════════════════
      Countdown
