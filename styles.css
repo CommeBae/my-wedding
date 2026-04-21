@@ -444,7 +444,7 @@ a {
   font-weight: 200;
   letter-spacing: 2px;
   margin-bottom: var(--spacing-md);
-  line-height: 2;
+  line-height: 0.75;
 }
 
 .hero__divider {
