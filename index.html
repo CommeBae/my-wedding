@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="format-detection" content="telephone=no">
 
-  <!-- Meta / OG tags - config.js 값으로 script에서 동적 설정 -->
+  <!-- OG / Meta tags - 하드코딩 (크롤러는 JS 실행 안 함) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="">
-  <meta property="og:description" content="">
-  <meta property="og:image" content="">
-  <meta name="description" content="">
+  <meta property="og:url" content="https://commebae.github.io/my-wedding/">
+  <meta property="og:title" content="허준배 ♥ 한선애 결혼식에 초대합니다">
+  <meta property="og:description" content="2026년 5월 30일 · KDW웨딩">
+  <meta property="og:image" content="https://commebae.github.io/my-wedding/images/og/1.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="description" content="2026년 5월 30일 · KDW웨딩 · 허준배 ♥ 한선애 결혼식에 초대합니다">
 
-  <title>Wedding Invitation</title>
+  <title>허준배 ♥ 한선애 결혼식에 초대합니다</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,17 +206,20 @@
   </main>
 
   <script src="script.js"></script>
+
+  <!-- 음악 토글 버튼 -->
   <button id="musicToggle" class="music-toggle" aria-label="음악 끄기">
-  <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-  </svg>
-  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="display:none">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-    <line x1="23" y1="9" x2="17" y2="15"/>
-    <line x1="17" y1="9" x2="23" y2="15"/>
-  </svg>
-</button>
+    <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+
 </body>
 </html>
