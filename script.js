@@ -286,7 +286,7 @@
      ═══════════════════════════════════════════ */
 
 function initHero() {
-  $('#heroPhoto').src = 'images/hero/1.jpg';
+  $('#heroPhoto').src = 'images/hero/1.png';
   $('#heroNames').innerHTML = `
     <div>
   <span class="hero-parent-info">${CONFIG.groom.father}&${CONFIG.groom.mother}의 아들</span><br>
